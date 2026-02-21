@@ -15,6 +15,9 @@ import {
     Clock,
     AlertCircle,
     ExternalLink,
+    Sliders,
+    X,
+    Check,
 } from 'lucide-react';
 
 interface NearbyRestaurant {
@@ -43,6 +46,15 @@ export default function NearbyPage() {
     const [restaurants, setRestaurants] = useState<NearbyRestaurant[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [hasSearched, setHasSearched] = useState(false);
+    
+    // Filter state
+    const [showFilters, setShowFilters] = useState(false);
+    const [filters, setFilters] = useState({
+      cuisines: [] as string[],
+      priceRange: [] as number[],
+      isOpenOnly: false,
+      dietary: [] as string[],
+    });
 
     // Initialize map
     useEffect(() => {
@@ -234,6 +246,45 @@ export default function NearbyPage() {
         return ['Free', 'Budget', 'Moderate', 'Expensive', 'Very Expensive'][level] || '';
     };
 
+    const getFilteredRestaurants = () => {
+        return restaurants.filter((r) => {
+            // Price range filter
+            if (filters.priceRange.length > 0 && r.priceLevel !== null) {
+                if (!filters.priceRange.includes(r.priceLevel)) {
+                    return false;
+                }
+            }
+
+            // Open only filter
+            if (filters.isOpenOnly && r.isOpen === false) {
+                return false;
+            }
+
+            // Cuisine filter (based on search results, cuisine is implicit in name/address)
+            // This is a simple heuristic based on common Malaysian cuisine keywords
+            if (filters.cuisines.length > 0) {
+                const restaurantText = (r.name + r.address).toLowerCase();
+                const matchesCuisine = filters.cuisines.some((cuisine) => {
+                    const keywords: Record<string, string[]> = {
+                        'Malay': ['nasi lemak', 'rendang', 'satay', 'roti canai', 'nasi kuning', 'ayam percik'],
+                        'Chinese': ['char kuey teow', 'dim sum', 'wonton', 'chow mein', 'chicken rice', 'soy'],
+                        'Indian': ['nasi kandar', 'roti prata', 'curry', 'biryani', 'tandoori', 'masala'],
+                        'Western': ['burger', 'steak', 'pizza', 'pasta', 'cafe', 'bistro'],
+                        'Vegetarian': ['vegan', 'vegetarian', 'salad', 'health'],
+                    };
+                    return (keywords[cuisine] || []).some((kw) => restaurantText.includes(kw));
+                });
+                if (!matchesCuisine) return false;
+            }
+
+            return true;
+        });
+    };
+
+    const hasActiveFilters = filters.cuisines.length > 0 || 
+                              filters.priceRange.length > 0 ||
+                              filters.isOpenOnly;
+
     const focusMarker = (index: number) => {
         const marker = markersRef.current[index];
         if (marker && mapInstanceRef.current) {
@@ -302,6 +353,129 @@ export default function NearbyPage() {
                         )}
                     </div>
 
+                    {/* Filter Panel Toggle */}
+                    <div className="mb-6 flex items-center justify-between">
+                        <button
+                            onClick={() => setShowFilters(!showFilters)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                                showFilters
+                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                    : hasActiveFilters
+                                    ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                                    : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+                            }`}
+                        >
+                            <Sliders className="w-4 h-4" />
+                            <span className="text-sm font-medium">Filters</span>
+                            {hasActiveFilters && (
+                                <span className="ml-1 flex items-center justify-center w-5 h-5 rounded-full bg-emerald-600 text-white text-xs font-bold">
+                                    {filters.cuisines.length + filters.priceRange.length + (filters.isOpenOnly ? 1 : 0)}
+                                </span>
+                            )}
+                        </button>
+                        {hasActiveFilters && (
+                            <button
+                                onClick={() => setFilters({ cuisines: [], priceRange: [], isOpenOnly: false, dietary: [] })}
+                                className="text-xs text-gray-500 hover:text-gray-700 underline"
+                            >
+                                Reset all
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Filter Panel */}
+                    {showFilters && (
+                        <div className="mb-6 bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+                            <div className="grid md:grid-cols-2 gap-6">
+                                {/* Cuisine Filter */}
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Cuisine Type</h3>
+                                    <div className="space-y-2">
+                                        {['Malay', 'Chinese', 'Indian', 'Western', 'Vegetarian'].map((cuisine) => (
+                                            <label key={cuisine} className="flex items-center gap-3 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={filters.cuisines.includes(cuisine)}
+                                                    onChange={(e) => {
+                                                        setFilters((prev) => ({
+                                                            ...prev,
+                                                            cuisines: e.target.checked
+                                                                ? [...prev.cuisines, cuisine]
+                                                                : prev.cuisines.filter((c) => c !== cuisine),
+                                                        }));
+                                                    }}
+                                                    className="w-4 h-4 text-emerald-600 rounded"
+                                                />
+                                                <span className="text-sm text-gray-700">{cuisine}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Price Range Filter */}
+                                <div>
+                                    <h3 className="font-semibold text-gray-900 text-sm mb-3">Price Range</h3>
+                                    <div className="space-y-2">
+                                        {['Budget (RM)', 'Moderate (RM)', 'Expensive (RM)', 'Very Expensive (RM)'].map((label, index) => (
+                                            <label key={label} className="flex items-center gap-3 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={filters.priceRange.includes(index)}
+                                                    onChange={(e) => {
+                                                        setFilters((prev) => ({
+                                                            ...prev,
+                                                            priceRange: e.target.checked
+                                                                ? [...prev.priceRange, index]
+                                                                : prev.priceRange.filter((p) => p !== index),
+                                                        }));
+                                                    }}
+                                                    className="w-4 h-4 text-emerald-600 rounded"
+                                                />
+                                                <span className="text-sm text-gray-700">{label}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Open Now Filter */}
+                            <div className="mt-6 pt-6 border-t">
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={filters.isOpenOnly}
+                                        onChange={(e) =>
+                                            setFilters((prev) => ({
+                                                ...prev,
+                                                isOpenOnly: e.target.checked,
+                                            }))
+                                        }
+                                        className="w-4 h-4 text-emerald-600 rounded"
+                                    />
+                                    <span className="text-sm font-medium text-gray-900">Show only open restaurants</span>
+                                </label>
+                            </div>
+
+                            <div className="mt-6 flex gap-2">
+                                <button
+                                    onClick={() => setShowFilters(false)}
+                                    className="flex-1 px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700"
+                                >
+                                    Apply Filters
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setFilters({ cuisines: [], priceRange: [], isOpenOnly: false, dietary: [] });
+                                        setShowFilters(false);
+                                    }}
+                                    className="flex-1 px-4 py-2 border border-gray-200 text-sm font-medium rounded-lg hover:bg-gray-50"
+                                >
+                                    Clear All
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Error */}
                     {error && (
                         <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 flex items-start gap-2">
@@ -333,7 +507,7 @@ export default function NearbyPage() {
                                     <h2 className="font-semibold text-gray-900 flex items-center gap-2">
                                         <MapPin className="w-4 h-4 text-emerald-600" />
                                         {hasSearched
-                                            ? `${restaurants.length} Restaurant${restaurants.length !== 1 ? 's' : ''} Found`
+                                            ? `${getFilteredRestaurants().length} Restaurant${getFilteredRestaurants().length !== 1 ? 's' : ''} ${hasActiveFilters ? 'Match' : 'Found'}`
                                             : 'Search for Restaurants'}
                                     </h2>
                                 </div>
@@ -351,24 +525,24 @@ export default function NearbyPage() {
                                             <Loader2 className="w-6 h-6 text-emerald-600 animate-spin mx-auto mb-2" />
                                             <p className="text-sm text-gray-500">Searching nearby...</p>
                                         </div>
-                                    ) : restaurants.length === 0 ? (
+                                    ) : getFilteredRestaurants().length === 0 ? (
                                         <div className="p-8 text-center">
                                             <MapPin className="w-8 h-8 text-gray-300 mx-auto mb-3" />
                                             <p className="text-sm text-gray-500">
-                                                No restaurants found. Try a different search.
+                                                {hasActiveFilters ? 'No restaurants match your filters. Try adjusting them.' : 'No restaurants found. Try a different search.'}
                                             </p>
                                         </div>
                                     ) : (
-                                        restaurants.map((r, index) => (
+                                        getFilteredRestaurants().map((r, index) => (
                                             <button
                                                 key={r.placeId}
-                                                onClick={() => focusMarker(index)}
+                                                onClick={() => focusMarker(restaurants.indexOf(r))}
                                                 className="w-full text-left p-4 border-b border-gray-50 hover:bg-emerald-50/50 transition-colors"
                                             >
                                                 <div className="flex gap-3">
                                                     <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
                                                         <span className="text-xs font-bold text-emerald-700">
-                                                            {index + 1}
+                                                            {restaurants.indexOf(r) + 1}
                                                         </span>
                                                     </div>
                                                     <div className="flex-1 min-w-0">
