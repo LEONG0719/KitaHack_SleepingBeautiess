@@ -197,12 +197,14 @@ export async function generateMealPlanWithAI(
         throw new Error('GEMINI_API_KEY is not configured');
     }
 
+    const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+
     // Layer 1: Build rule-based constraints
     const constraints = buildConstraints(preferences);
 
     // Layer 2: Call Gemini with constraints baked into the prompt
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: modelName });
 
     const prompt = buildPrompt(preferences, constraints);
     const result = await model.generateContent(prompt);
@@ -263,10 +265,12 @@ export async function swapMealWithAI(
         throw new Error('GEMINI_API_KEY is not configured');
     }
 
+    const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+
     const constraints = buildConstraints(preferences);
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: modelName });
 
     const prompt = buildSwapPrompt(currentMeal.name, currentMeal.mealType, preferences, constraints);
     const result = await model.generateContent(prompt);

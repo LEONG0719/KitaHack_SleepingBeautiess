@@ -63,6 +63,13 @@ export default function Navbar() {
             >
               Nearby
             </Link>
+            <Link
+              href="/profile"
+              className={`text-sm font-medium transition-colors hover:text-emerald-600 ${pathname === '/profile' ? 'text-emerald-600' : 'text-gray-700'
+                }`}
+            >
+              Profile
+            </Link>
 
             {/* Auth section */}
             {user ? (

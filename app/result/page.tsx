@@ -7,6 +7,7 @@ import Stepper from '@/components/Stepper';
 import MealCard from '@/components/MealCard';
 import Toast from '@/components/Toast';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import NutriBuddy from '@/components/NutriBuddy';
 import { Button } from '@/components/ui/button';
 import { MealPlan, Meal } from '@/lib/types';
 import { saveMealPlanToFirestore } from '@/lib/firestore';
@@ -27,6 +28,11 @@ export default function ResultPage() {
     message: string;
     type: 'success' | 'error' | 'info';
   } | null>(null);
+  const [buddyStats, setBuddyStats] = useState({
+    vitality: 78,
+    level: 4,
+    streak: 2,
+  });
 
   useEffect(() => {
     const planStr = localStorage.getItem('currentPlan');
@@ -37,6 +43,34 @@ export default function ResultPage() {
 
     const loadedPlan: MealPlan = JSON.parse(planStr);
     setPlan(loadedPlan);
+
+    const buddyStr = localStorage.getItem('nutriBuddyStats');
+    if (buddyStr) {
+      try {
+        const parsed = JSON.parse(buddyStr) as Partial<{
+          vitality: number;
+          level: number;
+          streak: number;
+        }>;
+        const next = {
+          vitality:
+            typeof parsed.vitality === 'number'
+              ? Math.max(0, Math.min(100, parsed.vitality))
+              : 78,
+          level:
+            typeof parsed.level === 'number'
+              ? Math.max(1, Math.floor(parsed.level))
+              : 4,
+          streak:
+            typeof parsed.streak === 'number'
+              ? Math.max(0, Math.floor(parsed.streak))
+              : 2,
+        };
+        setBuddyStats(next);
+      } catch (error) {
+        setBuddyStats({ vitality: 78, level: 4, streak: 2 });
+      }
+    }
   }, [router]);
 
   const handleSwapMeal = async (
@@ -195,6 +229,14 @@ export default function ResultPage() {
             <p className="text-gray-600">
               A balanced daily plan tailored to your preferences
             </p>
+          </div>
+
+          <div className="mb-8">
+            <NutriBuddy
+              vitality={buddyStats.vitality}
+              level={buddyStats.level}
+              streak={buddyStats.streak}
+            />
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 mb-8">
