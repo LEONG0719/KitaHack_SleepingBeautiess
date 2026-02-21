@@ -89,42 +89,48 @@ export default function LoadingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-white">
       <Navbar />
       <Stepper currentStep={2} steps={['Preferences', 'Loading', 'Results']} />
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="bg-emerald-100 rounded-full p-6">
-                <Sparkles className="w-16 h-16 text-emerald-600 animate-pulse" />
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="bg-white rounded-2xl shadow-sm border border-amber-200 p-10 sm:p-12">
+          <div className="flex flex-col lg:flex-row items-center gap-10">
+            <div className="flex-1 text-center lg:text-left">
+              <span className="inline-flex items-center rounded-full bg-amber-100 text-amber-700 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                In the kitchen
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-4 mb-3">
+                Crafting Your Meal Plan
+              </h1>
+              <p className="text-lg text-gray-600 mb-6">
+                Our AI is balancing nutrition, budget, and local flavors.
+              </p>
+
+              <div className="bg-amber-50 rounded-lg p-5">
+                <p className="text-amber-700 font-medium">
+                  {LOADING_MESSAGES[messageIndex]}
+                </p>
               </div>
-              <Loader2 className="w-8 h-8 text-emerald-600 absolute -bottom-2 -right-2 animate-spin" />
+
+              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden mt-6">
+                <div
+                  className="bg-amber-500 h-2 rounded-full transition-all duration-500 ease-out"
+                  style={{
+                    width: `${((messageIndex + 1) / LOADING_MESSAGES.length) * 100}%`,
+                  }}
+                />
+              </div>
             </div>
-          </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Creating Your Perfect Meal Plan
-          </h1>
-
-          <p className="text-lg text-gray-600 mb-8">
-            This will only take a moment...
-          </p>
-
-          <div className="bg-emerald-50 rounded-lg p-6 mb-6">
-            <p className="text-emerald-700 font-medium">
-              {LOADING_MESSAGES[messageIndex]}
-            </p>
-          </div>
-
-          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-            <div
-              className="bg-emerald-600 h-2 rounded-full transition-all duration-500 ease-out"
-              style={{
-                width: `${((messageIndex + 1) / LOADING_MESSAGES.length) * 100}%`,
-              }}
-            />
+            <div className="relative flex items-center justify-center">
+              <div className="h-44 w-44 rounded-full bg-amber-100 flex items-center justify-center">
+                <Sparkles className="w-20 h-20 text-amber-600 animate-pulse" />
+              </div>
+              <div className="absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-white border border-amber-200 shadow-sm flex items-center justify-center">
+                <Loader2 className="w-6 h-6 text-amber-600 animate-spin" />
+              </div>
+            </div>
           </div>
         </div>
       </main>

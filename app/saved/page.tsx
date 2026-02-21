@@ -81,100 +81,81 @@ export default function SavedPlansPage() {
               </Button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-4">
               {savedPlans.map((plan) => (
                 <div
                   key={plan.id}
-                  className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl border border-gray-200 shadow-sm"
                 >
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs text-gray-500">
-                        {new Date(plan.date).toLocaleDateString('en-MY', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                        })}
-                      </span>
-                      <button
-                        onClick={() => handleDeletePlan(plan.id)}
-                        className="text-gray-400 hover:text-red-600 transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 p-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+                          Saved Plan
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {new Date(plan.date).toLocaleDateString('en-MY', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </span>
+                      </div>
 
-                    <h3 className="font-bold text-lg text-gray-900 mb-4">
-                      Daily Meal Plan
-                    </h3>
+                      <h3 className="font-bold text-lg text-gray-900 mb-4">
+                        Daily Meal Plan Snapshot
+                      </h3>
 
-                    <div className="space-y-3 mb-6">
-                      <div className="flex items-start">
-                        <span className="text-lg mr-2">🌅</span>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">
+                      <div className="grid sm:grid-cols-3 gap-3 mb-4">
+                        <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
+                          <p className="text-xs text-gray-500">Breakfast</p>
+                          <p className="text-sm font-semibold text-gray-900">
                             {plan.breakfast.name}
                           </p>
-                          <p className="text-xs text-gray-500">
-                            {plan.breakfast.cuisine}
-                          </p>
                         </div>
-                      </div>
-
-                      <div className="flex items-start">
-                        <span className="text-lg mr-2">☀️</span>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">
+                        <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
+                          <p className="text-xs text-gray-500">Lunch</p>
+                          <p className="text-sm font-semibold text-gray-900">
                             {plan.lunch.name}
                           </p>
-                          <p className="text-xs text-gray-500">
-                            {plan.lunch.cuisine}
-                          </p>
                         </div>
-                      </div>
-
-                      <div className="flex items-start">
-                        <span className="text-lg mr-2">🌙</span>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">
+                        <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
+                          <p className="text-xs text-gray-500">Dinner</p>
+                          <p className="text-sm font-semibold text-gray-900">
                             {plan.dinner.name}
                           </p>
-                          <p className="text-xs text-gray-500">
-                            {plan.dinner.cuisine}
-                          </p>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="space-y-2 mb-6 pb-6 border-b">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 flex items-center">
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                        <span className="flex items-center">
                           <DollarSign className="w-4 h-4 mr-1" />
-                          Total Cost
-                        </span>
-                        <span className="font-semibold text-gray-900">
                           RM {plan.totalCost.toFixed(2)}
                         </span>
-                      </div>
-
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 flex items-center">
+                        <span className="flex items-center">
                           <Flame className="w-4 h-4 mr-1" />
-                          Calories
-                        </span>
-                        <span className="font-semibold text-gray-900">
-                          {plan.totalCaloriesMin}-{plan.totalCaloriesMax}
+                          {plan.totalCaloriesMin}-{plan.totalCaloriesMax} kcal
                         </span>
                       </div>
                     </div>
 
-                    <Button
-                      onClick={() => handleViewPlan(plan)}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2"
-                    >
-                      <Eye className="w-4 h-4" />
-                      View Plan
-                    </Button>
+                    <div className="flex flex-col gap-3 lg:min-w-[180px]">
+                      <Button
+                        onClick={() => handleViewPlan(plan)}
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2"
+                      >
+                        <Eye className="w-4 h-4" />
+                        View Plan
+                      </Button>
+                      <Button
+                        onClick={() => handleDeletePlan(plan.id)}
+                        variant="outline"
+                        className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center justify-center gap-2"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
