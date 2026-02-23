@@ -4,6 +4,8 @@ import {
     getDocs,
     deleteDoc,
     doc,
+    getDoc,
+    setDoc,
     query,
     where,
     orderBy,
@@ -11,7 +13,7 @@ import {
     Timestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { MealPlan } from './types';
+import { MealPlan, UserProfile } from './types';
 import { getAuth } from 'firebase/auth';
 import app from './firebase';
 
@@ -146,4 +148,29 @@ export async function deleteMealPlanFromFirestore(planId: string): Promise<void>
     );
 
     await Promise.all(deletePromises);
+}
+
+// ============================================================
+// USER PROFILE
+// ============================================================
+
+export async function getUserProfile(uid: string): Promise<UserProfile | null> {
+    const profileRef = doc(db, 'userProfiles', uid);
+    const snapshot = await getDoc(profileRef);
+    if (!snapshot.exists()) {
+        return null;
+    }
+    return snapshot.data() as UserProfile;
+}
+
+export async function saveUserProfile(profile: UserProfile): Promise<void> {
+    const profileRef = doc(db, 'userProfiles', profile.uid);
+    await setDoc(
+        profileRef,
+        {
+            ...profile,
+            updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+    );
 }

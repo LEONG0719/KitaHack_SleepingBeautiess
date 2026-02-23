@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: '/saved', label: 'Saved' },
   { href: '/nearby', label: 'Nearby' },
   { href: '/leaderboard', label: 'Leaderboard' },
+  { href: '/profile', label: 'Profile' },
 ];
 
 const MODE_CONFIG: Record<SeasonalMode, { icon: React.ReactNode; label: string; color: string }> = {
@@ -70,8 +71,8 @@ export default function Navbar() {
                 key={href}
                 href={href}
                 className={`text-xs sm:text-sm font-medium transition-colors hover:text-emerald-600 px-1.5 sm:px-2 py-1 rounded ${pathname === href
-                    ? 'text-emerald-600 bg-emerald-50'
-                    : 'text-gray-600'
+                  ? 'text-emerald-600 bg-emerald-50'
+                  : 'text-gray-600'
                   }`}
               >
                 {label}

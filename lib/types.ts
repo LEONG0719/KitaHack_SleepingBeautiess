@@ -49,3 +49,20 @@ export interface SavedPlan {
   createdAt: string;
   plan: MealPlan;
 }
+
+export interface UserProfile {
+  uid: string;
+  displayName: string;
+  email: string;
+  photoURL?: string;
+  bio?: string;
+  campus?: string;
+  goals?: UserPreferences['goals'];
+  favoriteCuisine?: string;
+  buddy?: {
+    vitality: number;
+    level: number;
+    streak: number;
+  };
+  updatedAt?: string;
+}
