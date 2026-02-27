@@ -1,0 +1,78 @@
+{
+  "project_info": {
+    "project_number": "412917315969",
+    "project_id": "kitahack-sleeping-beauties",
+    "storage_bucket": "kitahack-sleeping-beauties.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412917315969:android:8fd91e925e23af4c569080",
+        "android_client_info": {
+          "package_name": "com.example.phone_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412917315969-5qdmc42jppsps2jnomjk46pdvrgi8fqg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.phone_app",
+            "certificate_hash": "53445eb497582e8c32474e189b1c62b87fa0d6f1"
+          }
+        },
+        {
+          "client_id": "412917315969-8g0stbi69gaafhr36cbdhicdapejvqo4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.phone_app",
+            "certificate_hash": "8dc256f989fc949dfc86620fb1af2cfd852d5003"
+          }
+        },
+        {
+          "client_id": "412917315969-am9g3llkpfac2ij9mbetjsukd4slmi4o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.phone_app",
+            "certificate_hash": "0c02e44d5d2fdbcd40fb14230b6445e5adae24b2"
+          }
+        },
+        {
+          "client_id": "412917315969-sgim2nq696uc55k0fm9jhf8fq2pphh01.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.phone_app",
+            "certificate_hash": "a84f21ee3835352093d6513340b338e4e5aaa27e"
+          }
+        },
+        {
+          "client_id": "412917315969-s51eael9hn6lr0391jdekcdkco3ca2rb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0ZzowNPvfDNmKbIBj09CwLwNu0mvCIdg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412917315969-s51eael9hn6lr0391jdekcdkco3ca2rb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "412917315969-mire77t6f5j68oa1ueovmm3gjbson8ac.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.phoneApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
