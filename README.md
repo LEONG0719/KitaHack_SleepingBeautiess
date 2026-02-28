@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="phone_app/assets/logo.png" width="200" alt="NutriBalance AI Logo" />
+<img src="phone_app/assets/logo.png" width="150" alt="NutriBalance AI Logo" />
 
 # NutriBalance AI 🥗🤖
 
@@ -18,7 +18,21 @@
 
 ---
 
-## 🚀 Quick Links & Demo
+## � Project Description
+
+**The Problem:** Malaysian university students and young professionals frequently struggle to maintain a balanced diet due to tight finances, busy schedules, and limited cooking experience. This results in an unhealthy "hybrid lifestyle" — a heavy reliance on cheap, ultra-processed fast food or skipped meals altogether, which leads to long-term physical health deterioration and poor academic performance.
+
+**SDG Alignment:** This project directly tackles **SDG 3: Good Health and Well-Being**. By providing realistic, affordable access to nutritious food, we actively reduce the dietary barriers that lead to Non-Communicable Diseases (NCDs) caused by reliance on cheap, processed foods.
+
+**The Solution:** NutriBalance AI resolves these issues through a comprehensive "Four Pillars" approach:
+1. **Dynamic Budgeting (Dual-Layer AI):** Instantly generates realistic meal plans that strictly fit a user's RM (Ringgit Malaysia) budget for both dorm cooking and eating out.
+2. **Visual Verification:** A Multimodal Vision Scanner that prevents fake logging by requiring users to snap a photo of their plate for AI verification.
+3. **Gamification:** Rewards verified healthy eating with "NutriCoins" and an evolving interactive digital avatar.
+4. **Cultural Context:** Proactively adapts meal generation logic for local Malaysian events, such as safely restructuring plans for Suhoor and Iftar during Ramadan.
+
+---
+
+## �🚀 Quick Links & Demo
 
 For immediate testing and review, please use the links below:
 
@@ -94,6 +108,28 @@ For judges or developers wishing to compile the application from source, please 
    npm run dev
    ```
    Open your browser and navigate to `http://localhost:3000`.
+
+---
+
+## 📄 Prototype Documentation
+
+### Technical Architecture
+Our solution utilizes a scalable, stateless AI layer operating above a real-time database. The **Frontend Ecosystem** is natively compiled across platforms using **Flutter** (mobile) and **Next.js/React** (web). These interfaces collect user constraints and trigger photo uploads. The **Backend Layer** relies on Firebase as the central nervous system, handling authentication and continuously syncing gamification states in real-time. Finally, the strictly stateless **AI Layer** utilizes dedicated API routes to communicate with the Gemini REST API, processing text and multimodal vision inputs without relying on rigid, legacy recipe databases.
+
+### Google Tech Integration
+* **Google Gemini 2.5 Flash API:** Selected for its blazing inference speed, robust native Multimodal (vision) capabilities essential for the "Scan-to-Complete" verification, and a deep contextual grasp of colloquial "Manglish".
+* **Firebase (Auth & Firestore):** Chosen over managing a custom PostgreSQL backend because its NoSQL real-time document sync is vital for keeping our gamification state (NutriCoins, Streaks) perfectly unified across web and mobile.
+* **Google Maps Places API:** Invaluable for translating abstract AI meal suggestions into literal, navigable physical locations (like affordable 'Economy Rice' stalls) directly around specific university campuses.
+
+### Challenges & Solutions
+**The Challenge:** Guaranteeing that the generative AI returned perfectly parseable JSON directly into our strictly-typed UI models. LLMs natively hallucinate markdown syntax (e.g., \`\`\`json) or conversational filler ("Here is your meal plan...") alongside the data, which crashed our Dart parsers.
+**The Solution:** We resolved this via a two-step defense strategy. First, we engineered strict prompt protocols forbidding markdown or conversational text. Second, we implemented robust code-level regex cleaners (`replaceAll('```json', '')`) combined with null-safe frontend class models. If a parsing anomaly still occurs, the codebase gracefully degrades to a hardcoded "Balanced State" object, ensuring the application absolutely never crashes.
+
+### Success Metrics
+We track our impact by monitoring sustained behavioral changes rather than simple screen taps:
+* **Verified Completed Meals:** Efficacy is proven by the number of meals visually verified by the Gemini API against the "Suku-Suku Separuh" plate ratio.
+* **Financial Impact:** We actively measure the average "RM Saved" delta between our AI-generated budget plans versus standard, untracked eating-out costs.
+* **User Engagement:** Tracked via Daily Active Users (DAU) maintaining a >3-day app streak and interacting with the AI chat companion.
 
 ---
 
