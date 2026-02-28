@@ -2,124 +2,127 @@
 
 **KitaHack 2026 Submission** | **Team: SleepingBeauties**
 
-*NutriBalance AI* is a smart, budget-conscious meal planning and gamified health companion designed specifically to help university students build sustainable, healthy eating habits without breaking the bank.
+---
 
-## 🎯 1. Problem Statement & SDG Alignment
-
-**The Problem:** 
-University students and young professionals often struggle to maintain a balanced diet due to tight finances, busy schedules, and limited cooking experience. This results in heavy reliance on fast food, skipped meals, and ultimately long-term impacts on both physical health and academic performance.
-
-**SDG Alignment (SDG 3: Good Health and Well-Being):** 
-This project directly aligns with SDG 3. By making personalized, nutritionist-grade meal planning accessible and affordable, we are actively promoting healthier lifestyles. The app integrates AI to solve the complex constraints of a student's budget, dietary rules, and cooking capabilities, demonstrating a scalable technological intervention for public health.
+## 🚀 Quick Links & Demo
+For immediate testing and review, please use the links below:
+- 🌐 **Live Website Demo:** [Insert Live Website Link Here]
+- 📱 **Download Android APK:** [Insert APK Download Link Here]
+- 🎥 **5-Minute Pitching Video:** [Insert YouTube Link Here]
 
 ---
 
-## 💻 2. Repository Structure
+## 💻 Local Developer Setup
+For judges or developers wishing to compile the application from source, please follow these steps:
 
-This repository contains two complete versions of NutriBalance AI, ensuring an accessible experience across all devices.
+1. **Prerequisites**
+   Ensure you have the following installed:
+   - **Flutter SDK** (v3.19.0 or higher)
+   - **Android Studio** or **VS Code** (with the Flutter extension installed)
 
-### 📱 `phone_app/` (Flutter Mobile App)
-A fully native cross-platform mobile application utilizing Google's Flutter framework. It offers a premium mobile experience complete with gamification features, NutriBuddy chat, and "Wok Hei" interactive health tracking.
-
-### 🌐 `KitaHack/` (Next.js Web App)
-A highly responsive, SEO-optimized web application built with Next.js and React. It provides a seamless desktop and mobile-web experience, allowing users to generate meal plans and analyze food receipts via their browser.
-
----
-
-## 🧠 3. AI Integration & Google Technologies
-
-We heavily integrated Google's ecosystem to build a scalable and intelligent application.
-
-### Why Google AI (Gemini)?
-We utilized the **Gemini 2.5 Flash API** via Google AI Studio for its blazing speed, nuanced context understanding, and ability to return perfectly structured JSON data. 
-- **Benefit to Project:** Gemini acts as the core engine. It powers our dynamic **Interactive Questionnaire**, generating highly personalized daily or weekly meal plans that adhere strictly to user-defined RM (Ringgit Malaysia) budgets. It also powers **NutriBuddy**, our in-app AI companion that chats with users in natural "Manglish", and our **NutriNudges**, delivering context-aware push notifications (e.g., tailored advice during Ramadan or Festive periods).
-
-### Technical Architecture & Google Stack
-- **Frontend / Platform:** Built with **Flutter** (Mobile) and **Next.js** (Web), utilizing the multi-platform capabilities of modern web and mobile tech.
-- **Backend / Database:** **Firebase Firestore** is used for real-time state management, saving user gamification stats (NutriCoins, Streaks), profile data, and "Seasonal Modes".
-- **Authentication:** **Firebase Auth** handles secure user logins across both the web and mobile platforms.
-- **Location Services:** **Google Maps API** powers the "Nearby Restaurants" feature, helping students find affordable eating options around campus natively embedded in the Flutter app.
-
----
-
-## 🔄 4. User Feedback & Iteration
-
-During our prototype phase, we gathered feedback from real university students. Here are three key insights and how we iterated:
-
-1. **Feedback:** *"Generic meal plans don't work for me because my budget changes every week."*
-   - **Iteration:** We built a dynamic input system where Gemini instantly recalculates meal ingredients and portions to fit *exactly* within the daily/weekly RM budget slider provided by the user.
-2. **Feedback:** *"Diet apps feel like a chore to use."*
-   - **Iteration:** We gamified the experience! We introduced **NutriCoins**, a "Wok Hei" experience level, Streaks, and an interactive AI "NutriBuddy" companion that visually tracks your "Vitality" HP based on your diet adherence.
-3. **Feedback:** *"Push notifications are usually annoying and out of touch with local culture."*
-   - **Iteration:** We developed **Pillar 4: Cultural Context & NutriNudges**. Users can select modes like "Bazaar Survival Mode" (Ramadan). Gemini uses this context to generate highly specific, empathetic push notifications (e.g., reminding them about Suhoor hydration in Manglish) rather than generic alerts.
-
----
-
-## 📈 5. Success Metrics & Scalability
-
-**Measurable Goals & Analytics:**
-- **User Engagement:** Tracked via Daily Active Users (DAU) maintaining a >3 day "Streak" and interactions with the NutriBuddy AI.
-- **Financial Impact:** Measuring the average "Estimated Cost RM" delta between users' generated plans vs. standard eating-out costs.
-
-**Scalability Roadmap:**
-Our architecture is inherently designed to scale:
-- **Firebase** allows our database to scale effortlessly from hundred to thousands of users without backend rewrites.
-- **Gemini AI** means we don't rely on a static database of recipes; the AI dynamically generates infinite combinations, allowing us to seamlessly expand to new countries, dietary restrictions, and currencies with zero active database maintenance.
-
----
-
-## 🛠️ 6. Technical Implementation & Challenges
-
-**Major Technical Challenge Resolved:**
-- **Challenge:** Guaranteeing that the Gemini AI always returned perfectly parseable data for our Flutter/Next.js UI, as LLMs occasionally hallucinate markdown or conversational text alongside JSON.
-- **Resolution:** We engineered strict Prompt Rules asking for pure JSON without markdown tags, and implemented robust regex cleaning (`replaceAll('```json', '')`) combined with null-safe data models. If parsing fails, the UI gracefully falls back to a default "Balanced State" object to prevent app crashes.
-
----
-
-## 🚀 7. Setup & Run Instructions
-
-### Prerequisites
-- A **Gemini API Key** (from Google AI Studio)
-- A **Google Maps API Key** (for Flutter Location Services)
-- Node.js (`v18+` for Web)
-- Flutter SDK (`^3.19.0+` for Mobile)
-
-### ▶️ Running the Flutter App (`phone_app`)
-1. Navigate to the mobile directory:
+2. **Clone the Repository**
    ```bash
-   cd phone_app
+   git clone [Insert your repository link here]
+   cd KitaHack_SleepingBeautiess/phone_app
    ```
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-3. Set up your environment variables by creating a `.env` file in the root of `phone_app/`:
+
+3. **Environment Variables**
+   Create a new file named `.env` in the root of the `phone_app` directory and populate it with your keys:
    ```env
    GEMINI_API_KEY=your_gemini_api_key_here
    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key_here
    ```
-4. Run the app:
+
+4. **Install Dependencies**
+   Fetch all required Flutter packages:
+   ```bash
+   flutter pub get
+   ```
+
+5. **Run the App**
+   Launch an emulator or connect a physical device, then run:
    ```bash
    flutter run
    ```
 
-### ▶️ Running the Next.js Web App (`KitaHack`)
-1. Navigate to the web directory:
-   ```bash
-   cd KitaHack
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Set up your environment variables by creating a `.env.local` file in the root of `KitaHack/`:
-   ```env
-   GEMINI_API_KEY=your_gemini_api_key_here
-   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_key
-   # Add Firebase Auth properties as needed
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-5. Open your browser and navigate to `http://localhost:3000`.
+---
+
+## Table of Contents
+
+### Category A: Impact
+- [Problem Statement & SDG Alignment](#problem-statement--sdg-alignment)
+- [User Feedback & Iteration](#user-feedback--iteration)
+- [Success Metrics & Scalability](#success-metrics--scalability)
+- [AI Integration](#ai-integration)
+- [Technology Innovation](#technology-innovation)
+
+### Category B: Technology
+- [Technical Architecture & Google Technologies](#technical-architecture--google-technologies)
+- [Technical Implementation & Challenges](#technical-implementation--challenges)
+- [Completeness and Demonstration](#completeness-and-demonstration)
+
+---
+
+## Category A: Impact
+
+### Problem Statement & SDG Alignment
+* **Problem Statement:** Malaysian university students and young professionals often struggle to maintain a balanced diet due to tight finances, busy schedules, and limited cooking experience. This results in an unhealthy "hybrid lifestyle" — heavily relying on cheap, ultra-processed fast food or skipping meals entirely, leading to long-term impacts on both physical health and academic performance.
+* **SDG Choice & Justification:** **SDG 3: Good Health and Well-Being**. By providing realistic, affordable access to nutritious food, we actively reduce the dietary barriers that lead to Non-Communicable Diseases (NCDs) caused by reliance on cheap, processed foods.
+* **Solution Approach:** NutriBalance AI solves this using a "Four Pillars" approach:
+  1. **Dual-Layer AI Hybrid Planning:** Dynamically generates meals that strictly fit a user's RM (Ringgit Malaysia) budget for both dorm cooking and eating out.
+  2. **Multimodal Vision Verifier:** Prevents fake logging by requiring users to snap a photo of their plate for AI verification before earning rewards.
+  3. **Gamification:** Rewards verified healthy eating with NutriCoins and an evolving interactive avatar (Wok Hei).
+  4. **Cultural Context Engine:** Proactively adapts meal paths for local Malaysian events, like restructuring plans for Suhoor and Iftar during Ramadan.
+
+### User Feedback & Iteration
+* **Testing Insights:** 
+  1. *Dynamic Budgets:* Generic meal templates fail because a student's budget fluctuates wildly week by week.
+  2. *Fake Logging:* Traditional diet apps feel like a chore, and users easily "cheat" by just clicking "completed" without actually eating the meal.
+  3. *Cultural Ignorance:* Standard AI planners ignore local fasting periods, making templates useless during events like Ramadan.
+* **Iterations Made:** 
+  1. Built the **Dual-Layer AI Engine** (Pillar 1) to instantly recalculate ingredients and portions to accurately fit the user's current RM budget slider.
+  2. Built **Scan-to-Complete** (Pillar 2). Users *must* upload a plate photo, which Gemini Vision evaluates against the Malaysian "Suku-Suku Separuh" plate ratio to verify completion and award gamified coins.
+  3. Deployed the **Cultural Context Engine** (Pillar 4). Users can toggle "Bazaar Survival Mode," instantly overhauling Gemini's logic to generate tailored Suhoor and Iftar recommendations safely within the app.
+
+### Success Metrics & Scalability
+* **Measurable Goals:** 
+  - **Verified Completed Meals:** Tracked through the Vision Scanner (ensuring logged meals were actually consumed).
+  - **User Engagement:** Daily Active Users (DAU) maintaining a >3-day app streak and interacting with the NutriBuddy chat companion.
+  - **Financial Impact:** The average "RM Saved" delta between our AI-generated budget plans versus standard eating-out costs.
+* **Scalability Roadmap:** 
+  - **Database:** Firebase allows our state management to scale effortlessly from hundreds to thousands of users without backend bottlenecks.
+  - **Global Context:** The Cultural Context Engine (Gemini prompting) can easily be extended globally to support Diwali, Thanksgiving, or strict dietary profiles (Vegan/Keto) simply by injecting new context rules, requiring zero database rewrites.
+  - **Local Expansion:** Expanding the Google Maps integration to map every university campus in Southeast Asia.
+
+### AI Integration
+* **AI Utilization:** AI is the core engine spanning the entire application. It acts as a financial planner (generating RM-restricted grocery lists), a nutritionist (providing Suku-Suku scores from photos), a localized companion (chatting in Manglish via NutriBuddy), and an event scheduler (adapting for Ramadan).
+* **Technology Choice:** We selected **Gemini 2.5 Flash** (via Google AI Studio) for its blazing speed, native Multimodal (vision) capabilities, and deep contextual grasp of "Manglish" (Malaysian English). Crucially, Gemini 2.5 Flash reliably returns perfectly structured JSON data, allowing seamless parsing into our UI components.
+
+### Technology Innovation
+* **Creativity:** We revolutionized the standard "diet tracker" by gamifying it. We introduced "NutriCoins" and an evolving avatar ("Wok Hei") whose health literally depends on the user logging verified meals. By taking the friction out of logging via AI image scanning, it turns diet tracking from a chore into a highly engaging game.
+* **Real-World Application:** Instead of generating abstract AI recipes with ingredients students can't find, we utilize the Google Maps API alongside Gemini to suggest physical, real-world affordable food locations (like nearby 'Economy Rice' stalls) directly around their specific university campus.
+
+---
+
+## Category B: Technology
+
+### Technical Architecture & Google Technologies
+* **System Architecture:** 
+  - **Frontend:** A cross-platform ecosystem utilizing natively compiled **Flutter** for the mobile app and **Next.js/React** for the SEO-optimized web application.
+  - **Backend Layer:** Firebase acts as the central Nervous System handling User Auth, state management, and real-time gamification syncs.
+  - **AI Layer:** Dedicated API routes directly communicate with the Gemini REST API to process text and multimodal vision inputs without relying on legacy recipe databases.
+* **Google Tech Justification:** 
+  - **Gemini 2.5 Flash API:** For unstructured data processing, vision analysis, and contextual text generation at low latency.
+  - **Firebase (Auth & Firestore):** Essential for secure, rapid user onboarding and real-time NoSQL state syncing across our web and mobile counterparts.
+  - **Google Maps Places API:** Crucial for translating AI meal "suggestions" into actual, navigable locations near the student.
+
+### Technical Implementation & Challenges
+* **Implementation Status:** Fully implemented. Both the Flutter Mobile app (`phone_app`) and Next.js Web app (`KitaHack`) have fully operational authentication, Gemini meal generation, gamification states, and Google Maps integrations successfully communicating.
+* **Major Technical Challenge:** Guaranteeing that Gemini always returned perfectly parseable data (JSON) directly into our Flutter/Next.js UI. LLMs natively hallucinate markdown (e.g., \`\`\`json) or conversational filler that crashes mobile UI parsers.
+  - **Resolution:** We engineered strict Prompt Engineering rules forbidding markdown tags and implemented robust regex cleaners (`replaceAll('```json', '')`) combined with Dart/TypeScript null-safe class models. If a parsing anomaly occurs, the code gracefully falls back to a default "Balanced State" object, ensuring the app never crashes for the user. Furthermore, analyzing complex mixed-Malaysian dishes via Vision AI required heavy prompt tuning to ensure accurate Suku-Suku scoring.
+
+### Completeness and Demonstration
+* **Prototype Status:** This is a fully functional, production-ready coded prototype utilizing a live Flutter codebase and a live Next.js codebase (Not low-code/no-code).
+* **Demo Video / GitHub:** 
+  - **GitHub Repository:** [Insert GitHub Link]
+  - **Pitching Video:** [Insert YouTube Link]
