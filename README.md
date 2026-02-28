@@ -1,6 +1,6 @@
 <div align="center">
 
-![NutriBalance AI Logo](logo_link_here)
+<img src="phone_app/assets/logo.png" width="200" alt="NutriBalance AI Logo" />
 
 # NutriBalance AI 🥗🤖
 
@@ -9,6 +9,8 @@
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 ![Next JS](https://img.shields.io/badge/Next-white?style=for-the-badge&logo=next.js&logoColor=black)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white)
+![Google Cloud](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
+![Google AI Studio](https://img.shields.io/badge/Google_AI_Studio-EA4335?style=for-the-badge&logo=google&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)
 ![Google Maps API](https://img.shields.io/badge/Google_Maps_API-4285F4?style=for-the-badge&logo=googlemaps&logoColor=white)
 
@@ -29,6 +31,8 @@ For immediate testing and review, please use the links below:
 ## 💻 Local Developer Setup
 
 For judges or developers wishing to compile the application from source, please follow these steps:
+
+### ▶️ 1. Running the Flutter App (`phone_app`)
 
 1. **Prerequisites**
    Ensure you have the following installed:
@@ -59,6 +63,37 @@ For judges or developers wishing to compile the application from source, please 
    ```bash
    flutter run
    ```
+
+### ▶️ 2. Running the Next.js Web App (`KitaHack`)
+
+1. **Prerequisites**
+   Ensure you have the following installed:
+   - **Node.js** (v18 or higher)
+
+2. **Navigate to the Web Directory**
+   Assuming you have already cloned the repository from the steps above:
+   ```bash
+   cd ../KitaHack
+   ```
+
+3. **Environment Variables**
+   Create a new file named `.env.local` in the root of the `KitaHack` directory:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
+   NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_key_here
+   # Add additional Firebase config variables if necessary
+   ```
+
+4. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+5. **Start the Development Server**
+   ```bash
+   npm run dev
+   ```
+   Open your browser and navigate to `http://localhost:3000`.
 
 ---
 
