@@ -38,7 +38,7 @@ For immediate testing and review, please use the links below:
 
 - 🌐 **Live Website Demo:** kita-hack-sleeping-beautiess.vercel.app
 - 📱 **Download Android APK:** https://drive.google.com/drive/folders/1V3OB_4XGYWTPCPSAFlsvEF3JqinjDDmp?usp=drive_link
-- 🎥 **5-Minute Pitching Video:** 
+- 🎥 **5-Minute Pitching Video:** https://youtu.be/IacMIyNJfrw
 
 ---
 
@@ -222,6 +222,3 @@ We track our impact by monitoring sustained behavioral changes rather than simpl
 ### Completeness and Demonstration
 
 * **Prototype Status:** This is a fully functional, production-ready coded prototype utilizing a live Flutter codebase and a live Next.js codebase (Not low-code/no-code).
-* **Demo Video / GitHub:** 
-  - **GitHub Repository:** [Insert GitHub Link]
-  - **Pitching Video:** [Insert YouTube Link]
