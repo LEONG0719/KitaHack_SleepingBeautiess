@@ -38,7 +38,7 @@ For immediate testing and review, please use the links below:
 
 - 🌐 **Live Website Demo:** kita-hack-sleeping-beautiess.vercel.app
 - 📱 **Download Android APK:** https://drive.google.com/drive/folders/1V3OB_4XGYWTPCPSAFlsvEF3JqinjDDmp?usp=drive_link
-- 🎥 **5-Minute Pitching Video:** https://youtu.be/IacMIyNJfrw
+- 🎥 **5-Minute Pitching Video:** https://youtu.be/rQTybRDRWfk
 
 ---
 
