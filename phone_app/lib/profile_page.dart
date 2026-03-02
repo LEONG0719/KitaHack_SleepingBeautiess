@@ -47,10 +47,16 @@ class _ProfilePageState extends State<ProfilePage> {
   final List<Content> _chatHistory = [];
 
   final List<String> campuses = [
+    'Universiti Teknologi Malaysia (UTM)',
     'Asia Pacific University (APU)',
     'Universiti Malaya (UM)',
     "Taylor's University",
     'Universiti Kebangsaan Malaysia (UKM)',
+    'Universiti Putra Malaysia (UPM)',
+    'Sunway University',
+    'Monash University Malaysia',
+    'HELP University',
+    'UCSI University',
     'Other',
   ];
 

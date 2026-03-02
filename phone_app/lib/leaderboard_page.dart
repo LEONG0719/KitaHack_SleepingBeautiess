@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // 🔥 IMPORT FIRESTORE
 import 'app_drawer.dart';
 import 'package:flutter/services.dart';
-// --- MOCK DATA MODELS (Translated from page.tsx) ---
+
+// --- MOCK DATA MODELS ---
 class Competitor {
   final String userId;
   final String displayName;
@@ -33,7 +35,7 @@ final List<Competitor> mockCompetitors = [
 ];
 
 final List<String> campuses = [
-  'All Campuses', 'Asia Pacific University (APU)', 'Universiti Malaya (UM)',
+  'All Campuses', 'Universiti Teknologi Malaysia (UTM)', 'Asia Pacific University (APU)', 'Universiti Malaya (UM)',
   "Taylor's University", 'Universiti Kebangsaan Malaysia (UKM)',
   'Universiti Putra Malaysia (UPM)', 'Sunway University',
   'Monash University Malaysia', 'HELP University', 'UCSI University', 'Other',
@@ -53,7 +55,67 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   String metric = 'weekly_suku_avg_score';
   String selectedCampus = 'All Campuses';
 
-  // HELPER: Get Tier Colors perfectly matching website
+  // 🔥 NEW STATE VARIABLES FOR DATABASE FETCHING
+  List<Competitor> _realUsers = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLeaderboardData(); // Fetch from Firebase on load!
+  }
+
+  // 🔥 FIRESTORE FETCH LOGIC (Mirrors your React website)
+  Future<void> _fetchLeaderboardData() async {
+    setState(() => _isLoading = true);
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection('users').get();
+      final List<Competitor> fetched = [];
+      
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        
+        // Parse fields safely (matching your website's database structure)
+        String name = data['fullName'] ?? data['display_name'] ?? 'User';
+        String campus = data['campus'] ?? 'Unset';
+        String tier = data['current_tier'] ?? 'Iron';
+        
+        // Handle gamification stats (handling both flat and nested objects)
+        Map<String, dynamic> gStats = data.containsKey('gamification_stats') 
+            ? data['gamification_stats'] as Map<String, dynamic> 
+            : {};
+            
+        int streak = gStats['current_health_streak_days'] ?? data['streak'] ?? 0;
+        int totalScans = gStats['total_scans'] ?? data['totalScans'] ?? 0;
+        
+        // Convert to double safely
+        double sukuScore = (gStats['weekly_suku_avg_score'] ?? data['weekly_suku_avg_score'] ?? 0.0).toDouble();
+        double rmSaved = (gStats['weekly_money_saved_rm'] ?? data['weekly_money_saved_rm'] ?? 0.0).toDouble();
+
+        fetched.add(Competitor(
+          userId: doc.id,
+          displayName: name,
+          campus: campus,
+          currentTier: tier,
+          streak: streak,
+          totalScans: totalScans,
+          sukuScore: sukuScore,
+          rmSaved: rmSaved,
+        ));
+      }
+      
+      if (mounted) {
+        setState(() {
+          _realUsers = fetched;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching leaderboard: $e');
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   Color _getTierColor(String tier) {
     switch (tier) {
       case 'Iron': return Colors.grey.shade600;
@@ -69,31 +131,42 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     }
   }
 
-  // Get Sorted Data
+  // 🔥 MERGE & SORT LOGIC
   List<Competitor> get _filteredAndSortedData {
-    List<Competitor> data = List.from(mockCompetitors);
+    // 1. Start with REAL users from Firestore
+    List<Competitor> data = List.from(_realUsers);
     
-    // Add current user to mock data if not testing with real DB yet
+    // 2. Add MOCK users (Ensuring no duplicates)
+    for (var mock in mockCompetitors) {
+      if (!data.any((c) => c.userId == mock.userId)) {
+        data.add(mock);
+      }
+    }
+
+    // 3. Fallback for Current User if they haven't saved profile data yet
     if (currentUser != null && !data.any((c) => c.userId == currentUser!.uid)) {
       data.add(Competitor(
         userId: currentUser!.uid, 
         displayName: currentUser!.displayName ?? 'You', 
-        campus: 'Earth', currentTier: 'Iron', streak: 2, totalScans: 5, sukuScore: 7.0, rmSaved: 35.0
+        campus: 'Earth', currentTier: 'Iron', streak: 0, totalScans: 0, sukuScore: 0.0, rmSaved: 0.0
       ));
     }
 
+    // 4. Filter by Campus
     if (selectedCampus != 'All Campuses') {
       data = data.where((c) => c.campus == selectedCampus).toList();
     }
 
+    // 5. Sort by active Tab Metric (Highest first)
     data.sort((a, b) {
       double valA = metric == 'weekly_suku_avg_score' ? a.sukuScore : a.rmSaved;
       double valB = metric == 'weekly_suku_avg_score' ? b.sukuScore : b.rmSaved;
-      return valB.compareTo(valA); // Highest first
+      return valB.compareTo(valA); 
     });
 
     return data;
   }
+
   void _handleAppExit() {
     showDialog(
       context: context,
@@ -109,7 +182,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                SystemNavigator.pop(); // Safely closes the app entirely!
+                SystemNavigator.pop(); 
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF00966C),
@@ -124,6 +197,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       }
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final data = _filteredAndSortedData;
@@ -137,11 +211,12 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       currentUserRank = data.indexWhere((c) => c.userId == currentUser!.uid) + 1;
       if (currentUserRank > 0) currentUserData = data[currentUserRank - 1];
     }
+
     return PopScope(
-      canPop: false, // 🔒 Locks the swipe-left gesture
+      canPop: false, 
       onPopInvoked: (bool didPop) {
         if (didPop) return;
-        _handleAppExit(); // Triggers the popup instead of going back
+        _handleAppExit(); 
       },
       child: Scaffold(
       drawer: const AppDrawer(activePage: 'Leaderboard'),
@@ -149,7 +224,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black), // This turns the Hamburger icon black
+        iconTheme: const IconThemeData(color: Colors.black),
         title: Row(
           children: [
             Icon(Icons.restaurant_menu, color: const Color(0xFF00966C)),
@@ -166,14 +241,17 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           ],
         ),
       ),
-      body: Stack(
+      
+      // 🔥 Show loading spinner while fetching DB data
+      body: _isLoading 
+        ? Center(child: CircularProgressIndicator(color: primaryGreen))
+        : Stack(
         children: [
           SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0).copyWith(bottom: 120), // Padding for sticky bar
+            padding: const EdgeInsets.all(20.0).copyWith(bottom: 120), 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // --- Header & Filters ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -228,7 +306,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                 const SizedBox(height: 40),
 
                 // --- PODIUM (Top 3) ---
-                // --- PODIUM (Top 3) ---
                 if (top3.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
@@ -271,7 +348,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF064E3B), // Dark emerald
+                  color: const Color(0xFF064E3B), 
                   border: const Border(top: BorderSide(color: Color(0xFF10B981), width: 4)),
                   boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, -5))],
                 ),
@@ -352,16 +429,14 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     };
     final rankColor = {1: Colors.amber.shade600, 2: Colors.grey.shade500, 3: Colors.orange.shade600};
 
-    // Use Dicebear PNG API
     final avatarUrl = "https://api.dicebear.com/7.x/micah/png?seed=${Uri.encodeComponent(entry.displayName)}&backgroundColor=f1f5f9";
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (rank == 1) const Icon(Icons.workspace_premium, color: Colors.amber, size: 28), // Floating crown replacement
+        if (rank == 1) const Icon(Icons.workspace_premium, color: Colors.amber, size: 28), 
         
-        // Avatar Stack
         Stack(
           alignment: Alignment.bottomCenter,
           clipBehavior: Clip.none,
@@ -380,11 +455,9 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
         ),
         const SizedBox(height: 12),
         
-        // Name & Score
         Text(entry.displayName.split(' ')[0], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, overflow: TextOverflow.ellipsis)),
         Text(metric == 'weekly_money_saved_rm' ? 'RM ${entry.rmSaved.toStringAsFixed(0)}' : entry.sukuScore.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Color(0xFF059669))),
         
-        // Stats
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -397,7 +470,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
         ),
         const SizedBox(height: 8),
 
-        // Podium Block
         Container(
           height: heightMap[rank],
           width: double.infinity,
@@ -423,13 +495,11 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       color: isCurrentUser ? primaryGreen.withOpacity(0.05) : Colors.transparent,
       child: Row(
         children: [
-          // Rank Number
           SizedBox(
             width: 32,
             child: Text('#$rank', style: TextStyle(fontWeight: FontWeight.w900, color: isCurrentUser ? primaryGreen : Colors.grey.shade400, fontSize: 16)),
           ),
           
-          // Avatar
           Container(
             width: 40, height: 40,
             decoration: BoxDecoration(
@@ -440,7 +510,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           ),
           const SizedBox(width: 12),
 
-          // Name & Details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,7 +532,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
             ),
           ),
 
-          // Small Stats
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -473,7 +541,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           ),
           const SizedBox(width: 12),
 
-          // Main Score
           SizedBox(
             width: 50,
             child: Text(
